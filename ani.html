@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Profile</title>
+  <style>
+    .main{
+      text-align: center;
+    }
+    .about img{
+      border-radius: 50%;
+      border: 4px solid lightblue;
+      width: 300px;
+      height: 300px;
+    }
+    .introduction h2{
+      font-size: 2rem;
+      color:lightcoral;
+    }
+    .repos{
+      width: 50%;
+    }
+    .repos .repos-content{
+      margin: 0 auto;
+      width: fit-content;
+      background: rgba(0,0,0, 0.2);
+      border-radius: 10px ;
+    }
+    .repos h2{
+      font-size: 3rem;
+      color: #111;
+      padding: 10px;
+    }
+    .repos .repos-list{
+      color: rgb(51, 0, 0);
+      list-style: none;
+    }
+    .repos ul li{
+      padding: 10px;
+      margin-bottom: 20px;
+      text-align: left;
+      font-size: 1rem;
+    }
+    .repos ul li span{
+      font-size: 2rem;
+      color: rgb(54, 129, 129);
+      padding: 0px 10px;
+    }
+    .repos{
+      width: auto;
+      padding: 100px;
+    }
+    .repos .repos-content{
+      margin: 0 auto;
+      width: fit-content;
+ 
+    }
+    .repos h2{
+      font-size: 2rem;
+      text-align: center;
+    }
+    .repos ul li span{
+      font-size: 1.5rem;
+    }
+  
+  </style>
+</head>
+
+<body>
+  <div id="loading">
+    loading.....
+  </div>
+  <div class="main" id="mainContainer" hidden>
+    <div class="about">
+  <img height="100" width="100" id="profileimage">
+  <div class="introduction">
+  <h2 id="fullname"></h2>
+  <p id="bio"></p>
+  <h5 id="followers"></h5>
+  <p>
+    Check me on github <a id="github-link">Github</a>
+  </p>
+  </div>
+  </div>
+  <a href="https://twitter.com/ashinaanisha?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @ashinaanisha</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div>
+<div id="repos" class="repos">
+  <div  id="repo" class="repos-content">
+    <h2>List of My Repositories</h2>
+    <ul class="repos-list" id="repos-list"></ul>
+  </div> 
+<script>
+  fetch("https://api.github.com/users/AnishaThapa1")
+  .then(response=>response.json())
+  .then(function(data)
+  {
+    console.log(data)
+    let followersCount=data["followers"]
+    let followersInfo=`I have been followed by ${followersCount} people on Github.`
+    document.getElementById("profileimage").src=data["avatar_url"]
+    document.getElementById("fullname").textContent=data["name"]
+    document.getElementById("bio").textContent=data["bio"]
+    document.getElementById("followers").textContent=followersInfo
+    document.getElementById("github-link").href=data["html_url"]
+    document.getElementById("mainContainer").hidden=false
+    document.getElementById("loading").hidden=true
+  })
+  fetch("https://api.github.com/users/AnishaThapa1/repos")
+    .then(response => response.json())
+    .then(function(data){
+
+      console.log(data)
+      data.forEach(element => {
+        const repoEl = document.createElement('li')
+        repoEl.innerHTML = `
+        <span>${element.name}</span>
+      `
+
+      document.getElementById('repos-list').appendChild(repoEl)
+      });
+    })
+</script>
+</body>
+</html>

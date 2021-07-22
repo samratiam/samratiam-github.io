@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <style>
+        *{
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-size: 20px;
+        }
+        #loading{
+            text-align: center;
+        }
+        #main-container{
+            text-align: center;
+        }
+        #main-container img{
+            border-radius: 50%;
+        }
+        #main-container h2{
+            color: rgb(74, 0, 170);
+            font-size: 30px;
+        }
+        #main-container #bio{
+            margin: 10px 0;
+        }
+        #main-container p{
+            margin: 20px 0;
+        }
+        .repos{
+      width: 50%;
+    }
+    .repos .repos-content{
+      margin: 0 auto;
+      width: fit-content;
+      background: rgba(25, 10, 163, 0.2);
+      border-radius: 10px ;
+    }
+    .repos h2{
+      font-size: 3rem;
+      color: #111;
+      padding: 10px;
+    }
+    .repos .repos-list{
+      color: rgb(138, 52, 52);
+      list-style: none;
+    }
+    .repos ul li{
+      list-style: none;
+      padding: 10px;
+      margin-bottom: 20px;
+      text-align: left;
+      font-size: 1rem;
+    }
+    .repos ul li span{
+      font-size: 2rem;
+      color: rgb(33, 57, 196);
+      padding: 0px 10px;
+    }
+    .repos{
+      width: auto;
+      padding: 100px;
+    }
+    .repos .repos-content{
+      margin: 0 auto;
+      width: fit-content;
+ 
+    }
+    .repos h2{
+      font-size: 2rem;
+      text-align: center;
+    }
+    .repos ul li span{
+      font-size: 1.5rem;
+    }
+    </style>
+</head>
+<body>
+    <div id="loading">
+        Loading...
+    </div>
+    <main id="main-container" hidden>
+        <img 
+            height="200"
+            width="200"
+            id = "profileImage"
+        >
+        <h2 id="fullName"></h2>
+        <p id="bio"></p>
+        <h4 id="followersInformation"></h4>
+        <p>
+            Check me on <a href="" id="githublink">Github</a>
+        </p>
+        <a class="twitter-timeline" data-width="300"  data-height="400" href="https://twitter.com/emperor1samrat?ref_src=twsrc%5Etfw">Tweets by emperor1samrat</a> 
+        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+        
+        <div id="repos" class="repos">
+            <div  id="repo" class="repos-content">
+              <h2>List of My Repositories</h2>
+              <ul id="repos-list"></ul>
+        </div> 
+    </main>
+
+    <script>
+        fetch("https://api.github.com/users/samratiam")
+        .then(response=> response.json())
+        .then(function(data)
+        {
+            console.log(data)
+            let followersCount = data['followers']
+            let followersInfo=`I have been followed by ${followersCount} people on Github.`
+            document.getElementById('profileImage').src = data['avatar_url']
+            document.getElementById('fullName').textContent = data['name']
+            document.getElementById('bio').textContent = data['bio']
+
+            document.getElementById('followersInformation').textContent = followersInfo
+
+            document.getElementById('githublink').href = data['html_url']
+            
+            document.getElementById('main-container').hidden = false
+            document.getElementById('loading').hidden = true
+        })
+        fetch("https://api.github.com/users/samratiam/repos")
+        .then(response => response.json())
+        .then(function(data){
+
+        console.log(data)
+        data.forEach(element => {
+            const repoEl = document.createElement('li')
+            repoEl.innerHTML = `
+            <span>${element.name}</span>
+        `
+
+        document.getElementById('repos-list').appendChild(repoEl)
+        });
+        })
+        
+    </script>
+</body>
+</html>
